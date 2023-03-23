@@ -5,7 +5,7 @@
 # Resource Pack Guide: https://jamesachambers.com/minecraft-bedrock-server-resource-pack-guide/
 #
 # To run the setup script use:
-# curl https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
+# curl https://raw.githubusercontent.com/f43r05/MinecraftBedrockServer/k3wn37/SetupMinecraft.sh | bash
 #
 # GitHub Repository: https://github.com/TheRemote/MinecraftBedrockServer
 
@@ -20,7 +20,9 @@ RandNum=$(echo $((1 + $RANDOM % 5000)))
 # It is meant to point to the root folder that holds all servers
 # For example if you had a separate drive mounted at /newdrive you would use DirName='/newdrive' for all servers
 # The servers will be separated by their name/label into folders
-DirName=$(readlink -e ~)
+
+DirName='/mnt/Minecraft'
+# DirName=$(readlink -e ~)
 if [ -z "$DirName" ]; then
   DirName=~
 fi
@@ -110,7 +112,7 @@ Update_Scripts() {
 
   # Download update.sh from repository
   echo "Grabbing update.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o update.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/update.sh
+  curl -H "Accept-Encoding: identity" -L -o update.sh https://raw.githubusercontent.com/f43r05/MinecraftBedrockServer/k3wn37/update.sh
   chmod +x update.sh
   sed -i "s<pathvariable<$PATH<g" update.sh
 }
@@ -130,18 +132,19 @@ Update_Service() {
 
   sudo systemctl daemon-reload
 
-  echo -n "Start Minecraft server at startup automatically (y/n)?"
-  read answer </dev/tty
-  if [[ "$answer" != "${answer#[Yy]}" ]]; then
+  echo -n "Setting the Minecraft $ServerName service to run at startup"
+  # echo -n "Start Minecraft server at startup automatically (y/n)?"
+  # read answer </dev/tty
+  # if [[ "$answer" != "${answer#[Yy]}" ]]; then
     sudo systemctl enable $ServerName.service
     # Automatic reboot at 4am configuration
     TimeZone=$(cat /etc/timezone)
     CurrentTime=$(date)
     echo "Your time zone is currently set to $TimeZone.  Current system time: $CurrentTime"
-    echo "You can adjust/remove the selected reboot time later by typing crontab -e or running SetupMinecraft.sh again."
-    echo -n "Automatically restart and backup server at 4am daily (y/n)?"
-    read answer </dev/tty
-    if [[ "$answer" != "${answer#[Yy]}" ]]; then
+    echo "Setting automatic restart and backup for 4am daily.  You can adjust/remove the selected reboot time later by typing 'crontab -e' or running SetupMinecraft.sh again."
+    # echo -n "Automatically restart and backup server at 4am daily (y/n)?"
+    # read answer </dev/tty
+    # if [[ "$answer" != "${answer#[Yy]}" ]]; then
       croncmd="$DirName/minecraftbe/$ServerName/restart.sh 2>&1"
       cronjob="0 4 * * * $croncmd"
       (
@@ -149,8 +152,8 @@ Update_Service() {
         echo "$cronjob"
       ) | crontab -
       echo "Daily restart scheduled.  To change time or remove automatic restart type crontab -e"
-    fi
-  fi
+    # fi
+  # fi
 }
 
 Fix_Permissions() {
@@ -345,7 +348,7 @@ fi
 if [ -e "SetupMinecraft.sh" ]; then
   rm -f "SetupMinecraft.sh"
   echo "Local copy of SetupMinecraft.sh running.  Exiting and running online version..."
-  curl https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
+  curl https://raw.githubusercontent.com/f43r05/MinecraftBedrockServer/k3wn37/SetupMinecraft.sh | bash
   exit 1
 fi
 
@@ -447,19 +450,20 @@ Update_Sudoers
 Fix_Permissions
 
 # Finished!
-echo "Setup is complete.  Starting Minecraft server. To view the console use the command screen -r or check the logs folder if the server fails to start."
-sudo systemctl daemon-reload
-sudo systemctl start "$ServerName.service"
+# echo "Setup is complete.  Starting Minecraft server. To view the console use the command screen -r or check the logs folder if the server fails to start."
+echo "Setup is complete.  Use 'sudo systemctl daemon-reload & ' . To view the console use the command screen -r or check the logs folder if the server fails to start."
+# sudo systemctl daemon-reload
+# sudo systemctl start "$ServerName.service"
 
 # Wait up to 30 seconds for server to start
-StartChecks=0
-while [[ $StartChecks -lt 30 ]]; do
-  if screen -list | grep -q "\.$ServerName\s"; then
-    break
-  fi
-  sleep 1
-  StartChecks=$((StartChecks + 1))
-done
+# StartChecks=0
+# while [[ $StartChecks -lt 30 ]]; do
+#   if screen -list | grep -q "\.$ServerName\s"; then
+#     break
+#   fi
+#   sleep 1
+#   StartChecks=$((StartChecks + 1))
+# done
 
 # Force quit if server is still open
 if ! screen -list | grep -q "\.$ServerName\s"; then
