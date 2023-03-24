@@ -417,9 +417,9 @@ if [ -d "$ServerName" ]; then
   Fix_Permissions
 
   # Setup completed
-  echo "Setup is complete.  Starting Minecraft $ServerName server.  To view the console use the command screen -r or check the logs folder if the server fails to start"
-  sudo systemctl daemon-reload
-  sudo systemctl start "$ServerName.service"
+  # echo "Setup is complete.  Starting Minecraft $ServerName server.  To view the console use the command screen -r or check the logs folder if the server fails to start"
+  # sudo systemctl daemon-reload
+  # sudo systemctl start "$ServerName.service"
 
   exit 0
 fi
@@ -453,7 +453,7 @@ Fix_Permissions
 
 # Finished!
 # echo "Setup is complete.  Starting Minecraft server. To view the console use the command screen -r or check the logs folder if the server fails to start."
-echo "Setup is complete.  Use 'sudo systemctl daemon-reload & ' . To view the console use the command screen -r or check the logs folder if the server fails to start."
+echo "Setup is complete.  Edit the server.config file to your liking then restart the computer, or use the start script in the server directory. To view the console use the command screen -r or check the logs folder if the server fails to start."
 # sudo systemctl daemon-reload
 # sudo systemctl start "$ServerName.service"
 
