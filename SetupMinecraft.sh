@@ -468,8 +468,8 @@ echo "Setup is complete.  Use 'sudo systemctl daemon-reload & ' . To view the co
 # done
 
 # Force quit if server is still open
-if ! screen -list | grep -q "\.$ServerName\s"; then
-  echo "Minecraft server failed to start after 20 seconds."
-else
-  echo "Minecraft server has started.  Type screen -r $ServerName to view the running server!"
-fi
+# if ! screen -list | grep -q "\.$ServerName\s"; then
+#   echo "Minecraft server failed to start after 20 seconds."
+# else
+#   echo "Minecraft server has started.  Type screen -r $ServerName to view the running server!"
+# fi
